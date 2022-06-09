@@ -1,14 +1,15 @@
 package com.yoti.android.cryptocurrencychallenge.market.presentation
 
 import androidx.annotation.StringRes
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.yoti.android.cryptocurrencychallenge.R
 import com.yoti.android.cryptocurrencychallenge.market.domain.GetMarketForAssetUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import java.lang.IllegalStateException
 import javax.inject.Inject
@@ -23,26 +24,33 @@ class MarketViewModel @Inject constructor(
     private val assetId: String = savedStateHandle[KEY_NAV_ARG_ASSET_ID]
         ?: throw IllegalStateException("No asset ID has been passed for retrieving the market")
 
-    private val _uiState: MutableLiveData<UiState> = MutableLiveData()
-    val uiState: LiveData<UiState> get() = _uiState
+    private val _uiState: MutableStateFlow<UiState> = MutableStateFlow(UiState.Loading)
+    val uiState: StateFlow<UiState> get() = _uiState.asStateFlow()
+
+    private val _isRefreshing: MutableStateFlow<Boolean> = MutableStateFlow(false)
+    val isRefreshing: StateFlow<Boolean> get() = _isRefreshing.asStateFlow()
 
     init {
+        viewModelScope.launch { loadMarket(assetId) }
+    }
+
+    fun onRefresh() {
         viewModelScope.launch {
-            _uiState.value = UiState.Loading
+            _isRefreshing.value = true
             loadMarket(assetId)
         }
     }
 
-    fun onRefresh() {
-        viewModelScope.launch { loadMarket(assetId) }
-    }
-
     private suspend fun loadMarket(assetId: String) {
         getMarketsUseCase(assetId)
-            .onFailure { _uiState.value = UiState.Error(R.string.error_message_long) }
+            .onFailure {
+                _uiState.value = UiState.Error(R.string.error_message_long)
+                _isRefreshing.value = false
+            }
             .onSuccess { market ->
                 val uiModel = marketUiFormatter.formatMarket(market)
                 _uiState.value = UiState.Success(uiModel)
+                _isRefreshing.value = false
             }
     }
 

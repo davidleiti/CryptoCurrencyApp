@@ -31,18 +31,23 @@ android {
         targetCompatibility JavaVersion.VERSION_1_8
     }
 
+    composeOptions {
+        kotlinCompilerExtensionVersion = "1.2.0-beta03"
+    }
+
     kotlinOptions {
         jvmTarget = '1.8'
     }
 
     buildFeatures {
         viewBinding = true
+        compose = true
     }
 }
 
 dependencies {
 
-    implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
+    implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlinVersion"
     implementation "androidx.appcompat:appcompat:1.4.2"
     implementation "androidx.constraintlayout:constraintlayout:2.1.4"
     implementation "androidx.core:core-ktx:1.8.0"
@@ -52,9 +57,21 @@ dependencies {
     implementation 'com.google.android.material:material:1.6.1'
     implementation "androidx.legacy:legacy-support-v4:1.0.0"
 
+    // Jetpack Compose
+    implementation 'androidx.activity:activity-compose:1.4.0'
+    implementation 'androidx.compose.material:material:1.2.0-beta03'
+    implementation "androidx.compose.compiler:compiler:1.2.0-beta03"
+    implementation 'androidx.compose.animation:animation:1.2.0-beta03'
+    implementation 'androidx.compose.ui:ui-tooling:1.2.0-beta03'
+    implementation "androidx.compose.runtime:runtime-livedata:1.2.0-beta03"
+    implementation 'androidx.lifecycle:lifecycle-viewmodel-compose:2.4.1'
+    implementation "com.google.accompanist:accompanist-swiperefresh:0.24.10-beta"
+    implementation "com.google.accompanist:accompanist-navigation-animation:0.24.10-beta"
+
     // Hilt
     implementation "com.google.dagger:hilt-android:$hiltVersion"
     kapt "com.google.dagger:hilt-compiler:$hiltVersion"
+    implementation "androidx.hilt:hilt-navigation-compose:1.0.0"
 
     // Lifecycle
     implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycleVersion"
@@ -64,6 +81,7 @@ dependencies {
     // Navigation
     implementation "androidx.navigation:navigation-fragment-ktx:$navigationVersion"
     implementation "androidx.navigation:navigation-ui-ktx:$navigationVersion"
+    implementation "androidx.navigation:navigation-compose:$navigationVersion"
 
     // Retrofit
     implementation "com.squareup.retrofit2:retrofit:$retrofitVersion"

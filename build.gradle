@@ -2,7 +2,7 @@
 
 buildscript {
     ext {
-        kotlin_version = '1.6.21'
+        kotlinVersion = '1.6.21'
         hiltVersion = '2.42'
         navigationVersion = "2.4.2"
         lifecycleVersion = "2.4.1"
@@ -18,7 +18,7 @@ buildscript {
 
     dependencies {
         classpath 'com.android.tools.build:gradle:7.2.1'
-        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlinVersion"
 
         classpath "com.google.dagger:hilt-android-gradle-plugin:$hiltVersion"
         classpath "androidx.navigation:navigation-safe-args-gradle-plugin:$navigationVersion"
@@ -29,7 +29,6 @@ allprojects {
     repositories {
         google()
         mavenCentral()
-        jcenter()
         maven { url "https://jitpack.io" }
     }
 }

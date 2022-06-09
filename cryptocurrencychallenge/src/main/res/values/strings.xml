@@ -10,6 +10,8 @@
     <string name="assets_title">Assets</string>
 
     <string name="ok_label">OK</string>
+    <string name="retry_label">Retry</string>
+    <string name="back_label">Back</string>
     <string name="error_message_short">An error has occurred</string>
     <string name="error_message_long">An error has occurred, please check your connection or come back later!</string>
     <string name="no_assets_message">Oops - No assets were found, please check your connection or come back later!</string>
