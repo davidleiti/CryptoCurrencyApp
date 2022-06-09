@@ -1,0 +1,17 @@
+<resources>
+    <string name="app_name">Cryptocurrency Challenge</string>
+
+    <string name="exchange_id_title">Exchange ID</string>
+    <string name="rank_title">Rank</string>
+    <string name="price_title">Price</string>
+    <string name="date_title">Date</string>
+
+    <string name="market_title">Market</string>
+    <string name="assets_title">Assets</string>
+
+    <string name="ok_label">OK</string>
+    <string name="error_message_short">An error has occurred</string>
+    <string name="error_message_long">An error has occurred, please check your connection or come back later!</string>
+    <string name="no_assets_message">Oops - No assets were found, please check your connection or come back later!</string>
+    <string name="error_refreshing_assets">Failed to load newest assets info, please check your connection.</string>
+</resources>
