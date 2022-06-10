@@ -25,10 +25,10 @@ import androidx.compose.ui.unit.dp
 import com.google.accompanist.swiperefresh.SwipeRefresh
 import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 import com.yoti.android.cryptocurrencychallenge.R
-import com.yoti.android.cryptocurrencychallenge.presentation.Caption
+import com.yoti.android.cryptocurrencychallenge.presentation.common.Caption
 import com.yoti.android.cryptocurrencychallenge.presentation.common.FullScreenError
 import com.yoti.android.cryptocurrencychallenge.presentation.common.FullScreenLoadingIndicator
-import com.yoti.android.cryptocurrencychallenge.presentation.Subtitle1
+import com.yoti.android.cryptocurrencychallenge.presentation.common.Subtitle1
 import com.yoti.android.cryptocurrencychallenge.presentation.common.InformationMessage
 
 @ExperimentalMaterialApi

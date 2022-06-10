@@ -10,6 +10,8 @@ import com.yoti.android.cryptocurrencychallenge.assets.domain.GetAssetsUseCase
 import com.yoti.android.cryptocurrencychallenge.assets.domain.LoadAssetsUseCase
 import com.yoti.android.cryptocurrencychallenge.assets.presentation.AssetUiItem
 import com.yoti.android.cryptocurrencychallenge.assets.presentation.AssetsViewModel
+import com.yoti.android.cryptocurrencychallenge.presentation.navigation.AppDestination
+import com.yoti.android.cryptocurrencychallenge.presentation.navigation.AppDestinationRouteProvider
 import io.mockk.MockKAnnotations
 import io.mockk.coEvery
 import io.mockk.coJustRun
@@ -42,6 +44,9 @@ class AssetsViewModelTest {
     @MockK
     lateinit var loadAssetsUseCase: LoadAssetsUseCase
 
+    @MockK
+    lateinit var appDestinationRouteProvider: AppDestinationRouteProvider
+
     private lateinit var sut: AssetsViewModel
 
     @Before
@@ -60,7 +65,7 @@ class AssetsViewModelTest {
         coJustRun { mockFlow.collect(any()) }
 
         // When
-        sut = AssetsViewModel(getAssetsUseCase, loadAssetsUseCase)
+        sut = AssetsViewModel(getAssetsUseCase, loadAssetsUseCase, appDestinationRouteProvider)
 
         // Then
         coVerify { loadAssetsUseCase() }
@@ -69,7 +74,7 @@ class AssetsViewModelTest {
     }
 
     @Test
-    fun `performInitialLoading() emits UiEvent error if assets loading fails`() = runTest {
+    fun `performInitialLoading() emits AssetsError if assets loading fails`() = runTest {
         // Given
         coEvery { loadAssetsUseCase() } returns Result.failure(TestException())
         val mockFlow = mockk<Flow<List<Asset>>>()
@@ -77,10 +82,10 @@ class AssetsViewModelTest {
         coJustRun { mockFlow.collect(any()) }
 
         // When
-        sut = AssetsViewModel(getAssetsUseCase, loadAssetsUseCase)
+        sut = AssetsViewModel(getAssetsUseCase, loadAssetsUseCase, appDestinationRouteProvider)
 
         // Then
-        assertEquals(AssetsViewModel.UiEvent.Error(R.string.error_refreshing_assets), sut.uiEvents.value)
+        assertEquals(AssetsViewModel.AssetsError(R.string.error_refreshing_assets), sut.errorState.value)
     }
 
     @Test
@@ -91,7 +96,7 @@ class AssetsViewModelTest {
         every { getAssetsUseCase() } returns testFlow
 
         // When
-        sut = AssetsViewModel(getAssetsUseCase, loadAssetsUseCase)
+        sut = AssetsViewModel(getAssetsUseCase, loadAssetsUseCase, appDestinationRouteProvider)
 
         // Then
         val expectedUiItems = listOf(AssetUiItem("testId", "", "", "0.0"))
@@ -106,7 +111,7 @@ class AssetsViewModelTest {
         every { getAssetsUseCase() } returns testFlow
 
         // When
-        sut = AssetsViewModel(getAssetsUseCase, loadAssetsUseCase)
+        sut = AssetsViewModel(getAssetsUseCase, loadAssetsUseCase, appDestinationRouteProvider)
 
         // Then
         assertEquals(AssetsViewModel.UiState.Empty, sut.uiState.value)
@@ -121,7 +126,7 @@ class AssetsViewModelTest {
         every { getAssetsUseCase() } returns testFlow
 
         // When
-        sut = AssetsViewModel(getAssetsUseCase, loadAssetsUseCase)
+        sut = AssetsViewModel(getAssetsUseCase, loadAssetsUseCase, appDestinationRouteProvider)
         sut.onRefreshTriggered()
 
         // Then
@@ -138,14 +143,14 @@ class AssetsViewModelTest {
         every { getAssetsUseCase() } returns testFlow
 
         // When
-        sut = AssetsViewModel(getAssetsUseCase, loadAssetsUseCase)
+        sut = AssetsViewModel(getAssetsUseCase, loadAssetsUseCase, appDestinationRouteProvider)
         coEvery { loadAssetsUseCase() } returns Result.failure(TestException())
         sut.onRefreshTriggered()
 
         // Then
         val expectedUiItems = listOf(AssetUiItem("testId", "", "", "0.0"))
         assertEquals(AssetsViewModel.UiState.Success(expectedUiItems), sut.uiState.value)
-        assertEquals(AssetsViewModel.UiEvent.Error(R.string.error_refreshing_assets), sut.uiEvents.value)
+        assertEquals(AssetsViewModel.AssetsError(R.string.error_refreshing_assets), sut.errorState.value)
         coVerify(exactly = 2) { loadAssetsUseCase() }
     }
 
@@ -156,12 +161,13 @@ class AssetsViewModelTest {
         val testFlow = flow { emit(listOf(Asset("testId"))) }
         every { getAssetsUseCase() } returns testFlow
         val testAssetUiItem = AssetUiItem("testId", "", "", "0.0")
+        every { appDestinationRouteProvider.provideDestinationRoute(AppDestination.Market("testId")) } returns "testDestination"
 
         // When
-        sut = AssetsViewModel(getAssetsUseCase, loadAssetsUseCase)
+        sut = AssetsViewModel(getAssetsUseCase, loadAssetsUseCase, appDestinationRouteProvider)
         sut.onAssetListItemClicked(testAssetUiItem)
 
         // Then
-        assertEquals(AssetsViewModel.UiEvent.NavigateToMarket("testId"), sut.uiEvents.value)
+        assertEquals("testDestination", sut.navigationState.value)
     }
 }

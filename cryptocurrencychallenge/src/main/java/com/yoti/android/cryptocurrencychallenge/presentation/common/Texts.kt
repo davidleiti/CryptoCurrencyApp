@@ -1,4 +1,4 @@
-package com.yoti.android.cryptocurrencychallenge.presentation
+package com.yoti.android.cryptocurrencychallenge.presentation.common
 
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text

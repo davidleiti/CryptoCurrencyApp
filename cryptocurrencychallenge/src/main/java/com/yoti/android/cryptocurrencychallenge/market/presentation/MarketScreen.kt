@@ -16,7 +16,6 @@ import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
@@ -26,8 +25,8 @@ import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 import com.yoti.android.cryptocurrencychallenge.R
 import com.yoti.android.cryptocurrencychallenge.presentation.common.FullScreenLoadingIndicator
 import com.yoti.android.cryptocurrencychallenge.presentation.common.FullScreenError
-import com.yoti.android.cryptocurrencychallenge.presentation.Header5
-import com.yoti.android.cryptocurrencychallenge.presentation.Subtitle1
+import com.yoti.android.cryptocurrencychallenge.presentation.common.Header5
+import com.yoti.android.cryptocurrencychallenge.presentation.common.Subtitle1
 
 @Composable
 fun MarketScreen(viewModel: MarketViewModel, navController: NavController) {
